@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Youtube©</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.1.2/tailwind.min.css" referrerpolicy="no-referrer" />
+    <title>Search Covid vaccine</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.1.2/tailwind.min.css"
+        referrerpolicy="no-referrer" />
     <link href='https://fonts.googleapis.com/css?family=Questrial' rel='stylesheet'>
     <style>
         * {
@@ -17,15 +18,14 @@
             /* font-size: 22px; */
 
         }
-
-        
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-        
+
         $(document).ready(() => {
-            
+
             $('#scan').hide();
+            $('#steps').hide();
             var audio = new Audio();
             var error = new Audio();
             var success = new Audio();
@@ -33,6 +33,7 @@
 
             audio.src = './a.mp3'
             scan.src = './scan.mp3'
+            scan.volume = 0.04
             error.src = './error.mp3'
             success.src = './success.mp3'
             // $('#on').click(() => {
@@ -42,30 +43,43 @@
             //     }, 1100000);
             // })
 
+            // $('#how').mouseover(()=>{
+            //     $('#steps').show();
+            // });
+            // $('#how').mouseout(()=>{
+            //     $('#steps').hide();
+            // });
+            $('#how').click(() => {
+                $('#bcz').hide();
+                $('#steps').show();
+            });
+            $('#why').click(() => {
+                $('#steps').hide();
+                $('#bcz').show();
+            });
 
 
 
 
 
 
-            
             $('#api').click(() => {
                 var pin = $('#pin').val();
                 var date = $('#date').val();
-                var year =  date.slice(0,4);
-                   var month =  date.slice(5,7);
-                   var day =  date.slice(8,10);
-                   
-                   console.log('Start🟢🟢');
-                   intervel = setInterval(function () {
-                       console.log('Scan🌌💫');
-                       $('#scan').show();
-                       $('#error').hide();
-                       
-                       var apiUrl = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${pin}&date=${day}-${month}-${year}`;
-                       // var apiUrl = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=512&date=20-05-2021`;
-                       fetch(apiUrl).then(response => {
-                           return response.json();
+                var year = date.slice(0, 4);
+                var month = date.slice(5, 7);
+                var day = date.slice(8, 10);
+
+                console.log('Start🟢🟢');
+                intervel = setInterval(function () {
+                    console.log('Scan🌌💫');
+                    $('#scan').show();
+                    $('#error').hide();
+
+                    var apiUrl = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${pin}&date=${day}-${month}-${year}`;
+                    // var apiUrl = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=512&date=20-05-2021`;
+                    fetch(apiUrl).then(response => {
+                        return response.json();
                     }).then(data => {
                         // console.log(`${date}`);
                         // console.log(`${day}`);
@@ -74,7 +88,7 @@
                         // console.log(`${pin}`);
                         scan.play();
                         console.log(data.sessions[0]);
-                        
+
                         if (data.sessions[0]) {
                             success.play();
                             $('#scan').hide();
@@ -116,32 +130,73 @@
 </head>
 
 <body>
-    <div class=" mx-auto w-screen h-full p-5  bg-gray-800  " >
-            <p class="text-white text-4xl text-center font-bold my-5 py-5">
-                Search Covid vaccine with PINCODE
-            </p>
-            <div class="flex justify-center w-auto">
-                <div class="p-2 w-1/2 rounded bg-purple-100 h-64" >
-                    <form action="#">
+    <header class="text-center text-xl ">
+        Made by
+        <a class="text-blue-600 underline" href="https://github.com/007hyno">
+            @007Hyno
+        </a>
+    </header>
+    <div class=" mx-auto w-screen h-full p-5  bg-gray-800  ">
+        <p class="text-white text-4xl text-center font-bold my-3 py-3">
+            Search Covid vaccine with PINCODE
+        </p>
+        <div class="text-center text-white">
+            <button id="how" class="bg-green-400 text-shadow p-1 m-2 text-white rounded">How it work?</button>
+            <button id="why" class="bg-blue-400 p-1 m-2 text-white rounded">Why this site?</button>
 
-                        <div class="p-5 bg-red-400  w-auto  text-center">
-                            
-                            <input type="text"  id="pin" class=" rounded text-xl sm\:resize-x md:mx-3 mx-auto text-center p-1 m-1 text-gray-700  text-3xl" placeholder="Pincode" required>
-                            <input type="date" data-date-format="DD MMMM YYYY"  id="date" required class=" rounded text-xl mx-auto text-center p-0 m-1 text-gray-700 text-3xl">
-                            
-                            
-                            <!-- <button class="bg-green-400 text-white p-2 font-bold text-2xl outline-none border-none text-xl rounded ">Search</button> -->
-                        </div>
-                        
-                        <div class=" text-center p-5 w-auto bg-pink-300 ">
-                            <button id="api" class="bg-green-400 text-white p-2 text-2xl rounded m-1">
-                        Go!!
-                    </button>
-                    <button id="stop" value="0" class="bg-red-600 text-white text-2xl p-2 rounded m-1">
-                        Bannd karoo!!
-                    </button>
-                </div>
-            </form>
+            <div id="steps">
+                <p class="text-white ">
+                    Step 1- 
+                    <span class="text-yellow-300">
+                        Type Your Pincode. 
+                    </span>
+                </p>
+                <p class="text-white ">
+                    Step 2- 
+                    <span class="text-yellow-300">    
+                        Type Your Date for vaccination.
+                    </span> 
+                </p>
+                <p class="text-green-500 text-lg mb-3">(This will keep searching for your vaccination slot (with drop sound) until you
+                    got one or an <span class="text-red-500">error</span> with a Notification sound)</p>
+            </div>
+
+            <div id="bcz" >
+                <p class="text-lg w-1/2 mx-auto text-green-400 mt-3">
+                    Stop Refreshing Cowid.gov for vaccination slot
+                    <br>
+                    <p class="text-lg font-bold w-1/2 mx-auto text-red-400 mb-3">
+                        "Aap ***** 11 pe team banao Ye mai kr leta hu"
+                    </p>
+                </p>
+            </div>
+
+        </div>
+        <div class="flex justify-center w-auto">
+            <div class="p-2 w-1/2 rounded bg-purple-100 h-64">
+                <form action="#">
+
+                    <div class="p-5 bg-red-400  w-auto  text-center">
+
+                        <input type="text" id="pin"
+                            class=" rounded text-xl sm\:resize-x md:mx-3 mx-auto text-center p-1 m-1 text-gray-700  text-3xl"
+                            placeholder="Pincode" required>
+                        <input type="date" data-date-format="DD MMMM YYYY" id="date" required
+                            class=" rounded text-xl mx-auto text-center p-0 m-1 text-gray-700 text-3xl">
+
+
+                        <!-- <button class="bg-green-400 text-white p-2 font-bold text-2xl outline-none border-none text-xl rounded ">Search</button> -->
+                    </div>
+
+                    <div class=" text-center p-5 w-auto bg-pink-300 ">
+                        <button id="api" class="bg-green-400 text-white p-2 text-2xl rounded m-1">
+                            Go!!
+                        </button>
+                        <button id="stop" value="0" class="bg-red-600 text-white text-2xl p-2 rounded m-1">
+                            Bannd karoo!!
+                        </button>
+                    </div>
+                </form>
 
                 <div class="p-3 text-white text-xl  bg-gray-900 h-auto">
                     <p class="text-center text-3xl">Result</p>
@@ -164,9 +219,9 @@
                           
                         </tbody>
                       </table> -->
-                      <p id="scan" class=" text-center text-2xl p-2 w-full bg-gray-800 m-2"> 🌌💫Searching..🌌💫  </p>
-                    <p id="error"     class="text-2xl p-2 w-full bg-gray-800 m-2"> </p>
-                    <p id="dis"     class="text-2xl p-2 w-full bg-gray-800 m-2"> </p>
+                    <p id="scan" class=" text-center text-2xl p-2 w-full bg-gray-800 m-2"> 🌌💫Searching..🌌💫 </p>
+                    <p id="error" class="text-2xl p-2 w-full bg-gray-800 m-2"> </p>
+                    <p id="dis" class="text-2xl p-2 w-full bg-gray-800 m-2"> </p>
                     <p id="address" class="text-2xl p-2 w-full bg-gray-800 m-2"> </p>
                     <p id="vaccine" class="text-2xl p-2 w-full bg-gray-800 m-2"> </p>
                     <p id="min-age" class="text-2xl p-2 w-full bg-gray-800 m-2"> </p>
@@ -174,13 +229,13 @@
                     <p id="dose1" class="text-2xl p-2 w-full bg-gray-800 m-2"> </p>
                     <p id="dose2" class="text-2xl p-2 w-full bg-gray-800 m-2"> </p>
                 </div>
-                
+
             </div>
-                </div>
-                <source src="a.mp3" type="audio/mpeg">
-
         </div>
+        <source src="a.mp3" type="audio/mpeg">
 
+
+    </div>
 </body>
 
 </html>
