@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Youtube©</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.1.2/tailwind.min.css" referrerpolicy="no-referrer" />
+    <link href='https://fonts.googleapis.com/css?family=Questrial' rel='stylesheet'>
+    <style>
+        * {
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Questrial';
+            /* font-size: 22px; */
+
+        }
+
+        
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        
+        $(document).ready(() => {
+            
+            $('#scan').hide();
+            var audio = new Audio();
+            var error = new Audio();
+            var success = new Audio();
+            var scan = new Audio();
+
+            audio.src = './a.mp3'
+            scan.src = './scan.mp3'
+            error.src = './error.mp3'
+            success.src = './success.mp3'
+            // $('#on').click(() => {
+            //     audio.play();
+            //     setInterval(function () {
+            //         console.log(`hi`);
+            //     }, 1100000);
+            // })
+
+
+
+
+
+
+
+            
+            $('#api').click(() => {
+                var pin = $('#pin').val();
+                var date = $('#date').val();
+                var year =  date.slice(0,4);
+                   var month =  date.slice(5,7);
+                   var day =  date.slice(8,10);
+                   
+                   console.log('Start🟢🟢');
+                   intervel = setInterval(function () {
+                       console.log('Scan🌌💫');
+                       $('#scan').show();
+                       $('#error').hide();
+                       
+                       var apiUrl = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${pin}&date=${day}-${month}-${year}`;
+                       // var apiUrl = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=512&date=20-05-2021`;
+                       fetch(apiUrl).then(response => {
+                           return response.json();
+                    }).then(data => {
+                        // console.log(`${date}`);
+                        // console.log(`${day}`);
+                        // console.log(`${month}`);
+                        // console.log(`${year}`);
+                        // console.log(`${pin}`);
+                        scan.play();
+                        console.log(data.sessions[0]);
+                        
+                        if (data.sessions[0]) {
+                            success.play();
+                            $('#scan').hide();
+                            $('#dis').text(`District - ${data.sessions[0].district_name}`);
+                            $('#vaccine').text(`Vaccine - ${data.sessions[0].vaccine}`);
+                            $('#address').text(`Address - ${data.sessions[0].address}`);
+                            $('#min-age').text(`Age - ${data.sessions[0].min_age_limit}`);
+                            $('#slot').text(`Slot Time - ${data.sessions[0].slots}`);
+                            $('#dose1').text(`Dose1 - ${data.sessions[0].available_capacity_dose1}`);
+                            $('#dose2').text(`Dose2 - ${data.sessions[0].available_capacity_dose2}`);
+                            clearInterval(intervel);
+                        }
+                    }).catch(err => {
+                        error.play();
+                        $('#error').text(`Error - ${err}`);
+                        $('#error').show();
+                        console.log('Error🔴');
+                        console.log(err);
+                        clearInterval(intervel);
+                    });
+                }, 2900);
+            })
+
+            $('#stop').click(() => {
+                $('#scan').hide();
+                clearInterval(intervel);
+            })
+
+
+
+
+
+            $('#off').click(() => {
+                audio.pause();
+            })
+        })
+
+    </script>
+</head>
+
+<body>
+    <div class=" mx-auto w-screen h-full p-5  bg-gray-800  " >
+            <p class="text-white text-4xl text-center font-bold my-5 py-5">
+                Search Covid vaccine with PINCODE
+            </p>
+            <div class="flex justify-center w-auto">
+                <div class="p-2 w-1/2 rounded bg-purple-100 h-64" >
+                    <form action="#">
+
+                        <div class="p-5 bg-red-400  w-auto  text-center">
+                            
+                            <input type="text"  id="pin" class=" rounded text-xl sm\:resize-x md:mx-3 mx-auto text-center p-1 m-1 text-gray-700  text-3xl" placeholder="Pincode" required>
+                            <input type="date" data-date-format="DD MMMM YYYY"  id="date" required class=" rounded text-xl mx-auto text-center p-0 m-1 text-gray-700 text-3xl">
+                            
+                            
+                            <!-- <button class="bg-green-400 text-white p-2 font-bold text-2xl outline-none border-none text-xl rounded ">Search</button> -->
+                        </div>
+                        
+                        <div class=" text-center p-5 w-auto bg-pink-300 ">
+                            <button id="api" class="bg-green-400 text-white p-2 text-2xl rounded m-1">
+                        Go!!
+                    </button>
+                    <button id="stop" value="0" class="bg-red-600 text-white text-2xl p-2 rounded m-1">
+                        Bannd karoo!!
+                    </button>
+                </div>
+            </form>
+
+                <div class="p-3 text-white text-xl  bg-gray-900 h-auto">
+                    <p class="text-center text-3xl">Result</p>
+                    <!-- <table class="table-fixed border-separate border border-green-80">
+                        <thead>
+                          <tr>
+                            <th class="border border-green-600">Title</th>
+                            <th class="border border-green-600">Author</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td class="border border-green-600">Intro to CSS</td>
+                            <td class="border border-green-600">Adam</td>
+                          </tr>
+                          <tr class="bg-emerald-200">
+                            <td class="border border-green-600">A Long ans a</td>
+                            <td class="border border-green-600">Adam</td>
+                          </tr>
+                          
+                        </tbody>
+                      </table> -->
+                      <p id="scan" class=" text-center text-2xl p-2 w-full bg-gray-800 m-2"> 🌌💫Searching..🌌💫  </p>
+                    <p id="error"     class="text-2xl p-2 w-full bg-gray-800 m-2"> </p>
+                    <p id="dis"     class="text-2xl p-2 w-full bg-gray-800 m-2"> </p>
+                    <p id="address" class="text-2xl p-2 w-full bg-gray-800 m-2"> </p>
+                    <p id="vaccine" class="text-2xl p-2 w-full bg-gray-800 m-2"> </p>
+                    <p id="min-age" class="text-2xl p-2 w-full bg-gray-800 m-2"> </p>
+                    <p id="slot" class="text-2xl p-2 w-full bg-gray-800 m-2"> </p>
+                    <p id="dose1" class="text-2xl p-2 w-full bg-gray-800 m-2"> </p>
+                    <p id="dose2" class="text-2xl p-2 w-full bg-gray-800 m-2"> </p>
+                </div>
+                
+            </div>
+                </div>
+                <source src="a.mp3" type="audio/mpeg">
+
+        </div>
+
+</body>
+
+</html>
